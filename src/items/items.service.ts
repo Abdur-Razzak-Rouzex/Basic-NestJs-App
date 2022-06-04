@@ -8,23 +8,27 @@ import { ItemModel } from './models/item.model';
 export class ItemsService {
   constructor(@InjectModel(ItemModel) private itemModel: typeof ItemModel) {}
 
-  getAllItems(): any {
-    return 'These are all of the items';
+  getAllItems(): Promise<ItemModel[]> {
+    return this.itemModel.findAll();
   }
 
-  async createItem(createItemDto: CreateItemDto): Promise<ItemModel> {
+  createItem(createItemDto: CreateItemDto): Promise<ItemModel> {
     return this.itemModel.create<ItemModel>(createItemDto);
   }
 
-  findOne(id: string): any {
-    return `the found item is: ${id}`;
+  findOne(id: number): any {
+    return this.itemModel.findOne({ where: { id } });
   }
 
-  updateItem(id: string, body: UpdateItemDto): any {
-    return `the updated item: ${id}, ${body}`;
+  async updateItem(id: number, updateItemDto: UpdateItemDto) {
+    const item = await this.itemModel.findOne({ where: { id } });
+    await item.update(updateItemDto);
+    return item;
   }
 
-  deleteItem(id: string): any {
-    return `${id} is deleted`;
+  async deleteItem(id: number): Promise<string> {
+    const item = await this.itemModel.findOne({ where: { id } });
+    await item.destroy();
+    return 'Item deleted Successfully';
   }
 }

@@ -6,6 +6,7 @@ import {
   Put,
   Delete,
   Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -16,30 +17,30 @@ export class ItemsController {
   constructor(private readonly itemService: ItemsService) {}
 
   @Get()
-  getAllItems(): any {
+  getAllItems() {
     return this.itemService.getAllItems();
   }
 
   @Post()
-  createItems(@Body() createItemDto: CreateItemDto): any {
+  createItems(@Body() createItemDto: CreateItemDto) {
     return this.itemService.createItem(createItemDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): any {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.itemService.findOne(id);
   }
 
   @Put(':id')
   updateItem(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateItemDto: UpdateItemDto,
-  ): any {
+  ) {
     return this.itemService.updateItem(id, updateItemDto);
   }
 
   @Delete(':id')
-  deleteItem(@Param('id') id: string): any {
+  deleteItem(@Param('id', ParseIntPipe) id: number) {
     return this.itemService.deleteItem(id);
   }
 }
