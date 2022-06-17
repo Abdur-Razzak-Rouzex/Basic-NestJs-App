@@ -8,27 +8,52 @@ import { ItemModel } from './models/item.model';
 export class ItemsService {
   constructor(@InjectModel(ItemModel) private itemModel: typeof ItemModel) {}
 
-  getAllItems(): Promise<ItemModel[]> {
-    return this.itemModel.findAll();
+  async getAllItems() {
+    try {
+      return await this.itemModel.findAll();
+    } catch (error) {
+      console.log('error in item service');
+      throw new Error(error);
+    }
   }
 
-  createItem(createItemDto: CreateItemDto): Promise<ItemModel> {
-    return this.itemModel.create<ItemModel>(createItemDto);
+  async createItem(createItemDto: CreateItemDto) {
+    try {
+      return await this.itemModel.create<ItemModel>(createItemDto);
+    } catch (error) {
+      console.log('error in item service');
+      throw new Error(error);
+    }
   }
 
-  findOne(id: number): any {
-    return this.itemModel.findOne({ where: { id } });
+  async findOne(id: number) {
+    try {
+      return await this.itemModel.findOne({ where: { id } });
+    } catch (error) {
+      console.log('error in item service');
+      throw new Error(error);
+    }
   }
 
   async updateItem(id: number, updateItemDto: UpdateItemDto) {
-    const item = await this.itemModel.findOne({ where: { id } });
-    await item.update(updateItemDto);
-    return item;
+    try {
+      const item = await this.itemModel.findOne({ where: { id } });
+      await item.update(updateItemDto);
+      return item;
+    } catch (error) {
+      console.log('error in item service');
+      throw new Error(error);
+    }
   }
 
   async deleteItem(id: number): Promise<string> {
-    const item = await this.itemModel.findOne({ where: { id } });
-    await item.destroy();
-    return 'Item deleted Successfully';
+    try {
+      const item = await this.itemModel.findOne({ where: { id } });
+      await item.destroy();
+      return 'Item deleted Successfully';
+    } catch (error) {
+      console.log('error in item service');
+      throw new Error(error);
+    }
   }
 }
